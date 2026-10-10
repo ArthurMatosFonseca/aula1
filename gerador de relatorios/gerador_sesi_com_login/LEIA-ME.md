@@ -11,7 +11,8 @@ Projeto sem Supabase. O frontend está em `public/index.html`; o backend de aute
 - Recuperação de senha por link de uso único; a redefinição encerra as sessões antigas.
 - Logout.
 - Área de relatórios bloqueada até login e confirmação do e-mail.
-- Geração de texto com IA no servidor, protegida por sessão, com limite básico de 20 relatórios por conta/dia.
+- Geração de relatórios com IA no servidor, protegida por sessão, com limite básico de 20 relatórios por conta/dia.
+- Pesquisa na web pela ferramenta `web_search` da OpenAI Responses API; quando a API devolver citações de URL, elas são anexadas ao relatório como fontes consultadas.
 - Download do relatório em DOCX pelo navegador, com a estrutura e a formatação SESI implementadas no HTML.
 
 ## Importante
@@ -60,6 +61,6 @@ Se o site usar um domínio próprio, configure `APP_ORIGIN` como variável/segre
 
 - Não compartilhe `OPENAI_API_KEY` ou `RESEND_API_KEY`.
 - O limite diário no código é básico; antes de divulgar amplamente, configure também limites de requisições no Cloudflare e monitore os custos da API.
-- A IA não deve inventar resultados experimentais nem referências. Informe dados e fontes reais e revise o documento antes de entregar.
+- A pesquisa na web depende de uma chave OpenAI válida, do acesso ao modelo e da disponibilidade da ferramenta `web_search` na API. A lista de fontes é montada a partir das citações de URL retornadas pela API; revise as fontes e o relatório antes de entregar. A pesquisa bibliográfica não substitui resultados experimentais reais. Se a API não oferecer suporte à ferramenta, a geração retornará erro em vez de simular uma pesquisa.
 - O DOCX é montado no navegador pela biblioteca `docx` carregada de uma CDN, então a geração do arquivo exige internet.
 - Esta entrega é o pacote de código; não foi possível publicar na sua conta Cloudflare nem testar o envio de e-mail sem acesso às suas contas e respectivas chaves.

@@ -136,12 +136,27 @@ async function generateReport(request, env) {
   const usage=await env.DB.prepare("INSERT INTO usage_daily (user_id,day,count) VALUES (?,?,1) ON CONFLICT(user_id,day) DO UPDATE SET count=count+1 RETURNING count").bind(user.id,day).first();
   if(usage && usage.count>20){await env.DB.prepare("UPDATE usage_daily SET count=count-1 WHERE user_id=? AND day=?").bind(user.id,day).run();return json({error:"Você atingiu o limite de 20 relatórios por dia. Tente novamente amanhã."},429);}
   const fields={subject,student:p.student,studentClass:p.studentClass,teacher:p.teacher,type:p.type,title,audience:p.audience,tone:p.tone,objective,model:p.model,extra:p.extra,context:p.context,method:p.method,data:p.data,analysis:p.analysis,limits:p.limits,sources:p.sources};
-  const prompt=`Elabore um relatório escolar de ${subject} em português brasileiro, adequado ao ensino médio e seguindo a estrutura de relatório da Escola SESI. Use exatamente estas seções: 1 Introdução; 2 Objetivos (objetivo geral e específicos); 3 Material e métodos (adaptar materiais/reagentes/vidrarias ao tema; não inventar procedimentos); 4 Resultados e discussão; 5 Conclusão; 6 Referências. Use redação acadêmica clara, específica ao tema e solicitação. NÃO invente dados experimentais, observações, procedimentos realizados, citações, autores, títulos ou referências. Se os dados ou fontes não foram fornecidos, declare essa limitação no texto e sugira onde inserir informações reais, sem fabricar resultados. Quando fontes forem fornecidas, utilize apenas essas fontes e não atribua a elas informações que não constem do material. Não afirme que fez pesquisa na internet. Não inclua capa, pois ela é montada no DOCX pelo navegador. Identificação e informações fornecidas: ${JSON.stringify(fields)}. Retorne somente o texto do relatório, com títulos de seção em linhas separadas.`;
-  const res=await fetch("https://api.openai.com/v1/chat/completions",{method:"POST",headers:{Authorization:`Bearer ${env.OPENAI_API_KEY}`,"Content-Type":"application/json"},body:JSON.stringify({model:env.OPENAI_MODEL||"gpt-4.1-mini",messages:[{role:"system",content:"Você é um assistente de redação científica escolar cuidadoso. Siga as instruções do usuário sem inventar evidências ou referências."},{role:"user",content:prompt}],temperature:0.4,max_tokens:5000})});
+  const prompt=`Elabore um relatório escolar de ${subject} em português brasileiro, adequado ao ensino médio e seguindo a estrutura de relatório da Escola SESI. Use exatamente estas seções: 1 Introdução; 2 Objetivos (objetivo geral e específicos); 3 Material e métodos; 4 Resultados e discussão; 5 Conclusão; 6 Referências.
+
+PESQUISA NA INTERNET: use a ferramenta de pesquisa na web disponibilizada nesta solicitação para pesquisar o tema antes de redigir. Priorize fontes confiáveis e pertinentes, como órgãos públicos, universidades, artigos científicos e instituições reconhecidas. Baseie as afirmações factuais em fontes realmente consultadas. Não invente autores, títulos, URLs, dados ou referências. Diferencie fatos publicados de dados experimentais que o aluno deveria coletar. A pesquisa bibliográfica não comprova que um experimento foi realizado. Se não conseguir verificar uma informação, sinalize a limitação.
+
+Não invente dados experimentais, observações ou procedimentos realizados. Na seção Material e métodos, descreva apenas o método informado pelo usuário ou, se não houver, deixe claro que a metodologia precisa ser definida. Em Resultados e discussão, não fabrique resultados: apresente a discussão bibliográfica que puder ser sustentada pelas fontes e sinalize quando faltarem dados experimentais. Use as fontes encontradas e as fontes fornecidas pelo usuário sem atribuir a elas informações que não contenham. Inclua citações no texto quando apropriado. A lista final de referências deve usar apenas fontes verificáveis consultadas. Não inclua capa, pois ela é montada no DOCX pelo navegador. Identificação e informações fornecidas: ${JSON.stringify(fields)}. Retorne somente o texto do relatório, com títulos de seção em linhas separadas.`;
+  const res=await fetch("https://api.openai.com/v1/responses",{method:"POST",headers:{Authorization:`Bearer ${env.OPENAI_API_KEY}`,"Content-Type":"application/json"},body:JSON.stringify({model:env.OPENAI_MODEL||"gpt-4.1-mini",tools:[{type:"web_search"}],input:[{role:"system",content:[{type:"input_text",text:"Você é um assistente de redação científica escolar cuidadoso. Pesquise na web quando solicitado, use fontes reais e nunca fabrique evidências ou referências."}]},{role:"user",content:[{type:"input_text",text:prompt}]}],temperature:0.4,max_output_tokens:6000})});
   const out=await res.json().catch(()=>({}));
-  if(!res.ok){await env.DB.prepare("UPDATE usage_daily SET count=MAX(0,count-1) WHERE user_id=? AND day=?").bind(user.id,day).run();return json({error:out.error?.message||"A IA não conseguiu gerar o relatório agora."},502);}
-  const report=out.choices?.[0]?.message?.content?.trim(); if(!report)return json({error:"A IA não retornou um texto válido."},502);
-  return json({report});
+  if(!res.ok){await env.DB.prepare("UPDATE usage_daily SET count=MAX(0,count-1) WHERE user_id=? AND day=?").bind(user.id,day).run();return json({error:out.error?.message||"A IA não conseguiu pesquisar e gerar o relatório agora."},502);}
+  let report=typeof out.output_text==="string"?out.output_text.trim():"";
+  if(!report && Array.isArray(out.output)){
+    report=out.output.flatMap(item=>Array.isArray(item.content)?item.content:[]).filter(item=>item.type==="output_text"&&typeof item.text==="string").map(item=>item.text).join("\n").trim();
+  }
+  if(!report){await env.DB.prepare("UPDATE usage_daily SET count=MAX(0,count-1) WHERE user_id=? AND day=?").bind(user.id,day).run();return json({error:"A IA não retornou um relatório válido."},502);}
+  const foundSources=[];
+  for(const item of (out.output||[])) for(const part of (item.content||[])) for(const ann of (part.annotations||[])) {
+    if(ann.type==="url_citation" && ann.url && /^https?:\/\//i.test(ann.url) && !foundSources.some(x=>x.url===ann.url)) foundSources.push({title:String(ann.title||ann.url).slice(0,300),url:ann.url});
+  }
+  if(foundSources.length && !/fontes consultadas|referências/i.test(report.slice(-1200))){
+    report += "\n\nFontes consultadas na pesquisa\n" + foundSources.map((source,i)=>`${i+1}. ${source.title} — ${source.url}`).join("\n");
+  }
+  return json({report,sources:foundSources,webSearchUsed:true});
 }
 export default {
   async fetch(request, env) {
