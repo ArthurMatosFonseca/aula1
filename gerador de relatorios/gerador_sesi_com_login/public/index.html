@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#102b46"><title>Gerador de Relatórios SESI — IA Acadêmica</title>
+<style>
+:root{--navy:#102b46;--blue:#1e5b8f;--cyan:#53c4d5;--ink:#172b3a;--muted:#647789;--line:#dce5ec;--bg:#f3f7fa;--white:#fff;--red:#b42318;--green:#16794b}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:linear-gradient(145deg,#eaf3f8 0%,#f8fbfd 55%,#e8f2f7 100%);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);display:flex;align-items:center;justify-content:center;padding:24px}
+.shell{width:min(100%,1000px);display:grid;grid-template-columns: .92fr 1.08fr;background:var(--white);border:1px solid #dce7ee;border-radius:26px;overflow:hidden;box-shadow:0 24px 70px #102b4618;min-height:640px}
+.brand{background:linear-gradient(155deg,#102b46,#174d76 72%,#1d6686);color:white;padding:42px 36px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.brand:after{content:"";position:absolute;width:330px;height:330px;border:1px solid #ffffff20;border-radius:50%;right:-170px;bottom:-100px;box-shadow:0 0 0 35px #ffffff08,0 0 0 70px #ffffff05}
+.logo{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.2px}.logo-mark{width:42px;height:42px;border-radius:13px;background:#ffffff18;border:1px solid #ffffff40;display:grid;place-items:center;font-size:18px}
+.brand h1{font-size:clamp(29px,3.4vw,42px);line-height:1.1;letter-spacing:-1.3px;margin:34px 0 16px;max-width:360px}.brand p{color:#d6e6f1;line-height:1.7;font-size:15px;max-width:350px}.brand-foot{color:#b8d2e4;font-size:12px;line-height:1.6;position:relative;z-index:1}
+.content{padding:40px clamp(24px,5vw,56px);display:flex;flex-direction:column;justify-content:center}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:var(--blue);margin-bottom:9px}
+h2{margin:0 0 8px;font-size:27px;letter-spacing:-.6px;color:var(--navy)}.sub{margin:0 0 26px;color:var(--muted);font-size:14px;line-height:1.55}
+.field{margin-bottom:15px}.field label{display:block;font-size:12px;font-weight:750;margin-bottom:7px;color:#334b5e}.field input,.field select{width:100%;border:1px solid #cfdce5;border-radius:11px;padding:13px 14px;font:inherit;font-size:14px;color:var(--ink);outline:none;background:#fff;transition:.15s}.field input:focus,.field select:focus{border-color:#3978a6;box-shadow:0 0 0 3px #3978a61c}.field input::placeholder{color:#9aaab6}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.password-wrap{position:relative}.password-wrap input{padding-right:65px}.show{position:absolute;right:9px;top:50%;transform:translateY(-50%);border:0;background:none;color:var(--blue);font-size:11px;font-weight:800;cursor:pointer}
+.btn{width:100%;border:0;border-radius:11px;background:var(--blue);color:white;padding:14px 16px;font:inherit;font-size:14px;font-weight:800;cursor:pointer;transition:.15s;margin-top:5px}.btn:hover{background:#17466e}.btn:disabled{opacity:.55;cursor:wait}.linkbtn{border:0;background:transparent;color:var(--blue);font-size:12px;font-weight:750;cursor:pointer;padding:10px 0}.row-between{display:flex;justify-content:space-between;align-items:center;gap:10px}.fine{font-size:11px;line-height:1.55;color:#7a8d9b;margin-top:18px}.message{display:none;padding:12px 13px;border-radius:10px;font-size:12px;line-height:1.5;margin:0 0 16px;overflow-wrap:anywhere}.message.show{display:block}.message.error{background:#fff0ef;color:var(--red);border:1px solid #ffd0cc}.message.success{background:#edfbf3;color:var(--green);border:1px solid #bce8ce}.message.info{background:#edf6fc;color:#225a7e;border:1px solid #c7e2f3}
+.hidden{display:none!important}.otp-box{letter-spacing:7px;text-align:center;font-size:24px!important;font-weight:800}.divider{height:1px;background:#e7edf1;margin:18px 0}.signed-card{border:1px solid var(--line);border-radius:14px;padding:18px;background:#f8fbfd}.signed-card strong{display:block;color:var(--navy);font-size:16px;margin-bottom:5px}.signed-card p{font-size:13px;color:var(--muted);line-height:1.6;margin:0 0 14px}.small-note{font-size:11px;color:#788c9a;line-height:1.5}
+.report-app{margin-top:18px;border:1px solid var(--line);border-radius:16px;padding:20px;background:#fff}.report-app h3{margin:0 0 7px;color:var(--navy);font-size:21px}.report-intro{font-size:13px;line-height:1.6;color:var(--muted);margin:0 0 20px}.report-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 13px}.report-app textarea,.report-app select,.report-app input{width:100%;border:1px solid #cfdce5;border-radius:10px;padding:12px;font:inherit;font-size:13px;color:var(--ink);background:white;outline:none}.report-app textarea{min-height:95px;resize:vertical;line-height:1.5}.report-app textarea:focus,.report-app select:focus,.report-app input:focus{border-color:#3978a6;box-shadow:0 0 0 3px #3978a61c}.report-app label{display:block;font-size:12px;font-weight:750;margin-bottom:7px;color:#334b5e}.report-app .field{margin-bottom:14px}.report-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:8px}.report-actions .btn{width:auto;flex:1;min-width:140px;margin:0}.btn-secondary{border:1px solid #cfdce5;border-radius:11px;background:#f7fafc;color:var(--navy);padding:12px 14px;font:inherit;font-size:13px;font-weight:800;cursor:pointer}.btn-secondary:disabled{opacity:.45;cursor:not-allowed}.output-wrap{margin-top:20px;border-top:1px solid var(--line);padding-top:18px}.output-wrap h4{margin:0 0 10px;color:var(--navy)}.report-output{white-space:pre-wrap;overflow-wrap:anywhere;background:#f7fafc;border:1px solid var(--line);border-radius:12px;padding:16px;font-size:13px;line-height:1.75;min-height:100px;color:#263d4e}.output-placeholder{color:#7a8d9b}@media(max-width:760px){.report-grid{grid-template-columns:1fr}.report-app{padding:16px}}
+@media(max-width:760px){body{padding:12px}.shell{grid-template-columns:1fr;min-height:auto;border-radius:20px}.brand{padding:22px 24px 18px;min-height:175px}.brand h1{font-size:27px;margin:22px 0 7px}.brand p{margin:0;font-size:13px}.brand-foot{display:none}.content{padding:27px 23px 30px}.logo-mark{width:35px;height:35px}.grid2{grid-template-columns:1fr;gap:0}}
+
+.content{justify-content:flex-start}.report-app{margin-top:0}.field textarea{width:100%;border:1px solid #cfdce5;border-radius:10px;padding:12px;font:inherit;font-size:13px;color:var(--ink);background:white;outline:none;min-height:95px;resize:vertical;line-height:1.5}.field textarea:focus{border-color:#3978a6;box-shadow:0 0 0 3px #3978a61c}.statusline{font-size:12px;color:var(--muted);line-height:1.5;margin-top:10px}.config-box{margin-top:14px;padding:13px;border:1px solid #c7e2f3;background:#edf6fc;color:#225a7e;border-radius:10px;font-size:12px;line-height:1.6}.brand h1{max-width:390px}.auth-panel{max-width:640px}.auth-tabs{display:flex;gap:8px;margin:0 0 18px}.auth-tab{flex:1;border:1px solid #cfdce5;background:#f7fafc;color:var(--navy);border-radius:10px;padding:10px;font:inherit;font-size:13px;font-weight:800;cursor:pointer}.auth-tab.active{background:#e7f2fa;border-color:#8bb7d5;color:#174d76}.signed-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 14px;padding:12px 14px;background:#f7fafc;border:1px solid var(--line);border-radius:12px}.signed-bar strong{font-size:13px;color:var(--navy)}.signed-bar .small-note{margin-top:3px;overflow-wrap:anywhere}@media(max-width:760px){.signed-bar{align-items:flex-start;flex-direction:column}.signed-bar button{width:100%}}</style><script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script></head><body><div class="shell">
+<aside class="brand"><div><div class="logo"><div class="logo-mark">SE</div><span>Gerador de Relatórios SESI</span></div><h1>Uma ideia bem desenvolvida começa com boas perguntas.</h1><p>Entre na sua conta para criar relatórios de Química ou Biologia em Word, seguindo o modelo da escola.</p></div><div class="brand-foot">Redação acadêmica assistida por IA<br>Revise os dados e as fontes antes de entregar.</div></aside>
+<main class="content"><div id="generatorIntro" class="hidden"><div class="eyebrow">Assistente de escrita acadêmica</div><h2>Gerar relatório com IA</h2><p class="sub">A IA adapta a redação à sua solicitação e à estrutura do modelo SESI; ao baixar, o arquivo será criado em DOCX. Campos vazios não serão tratados como fatos: resultados, métodos e referências não devem ser inventados.</p></div>
+<div id="message" class="message" role="status" aria-live="polite"></div>
+<section id="authPanel" class="report-app auth-panel">
+  <div class="eyebrow">Área do usuário</div><h3 id="authTitle">Entrar na sua conta</h3>
+  <p class="report-intro">Crie sua conta ou entre para acessar o gerador de relatórios.</p>
+  <div class="auth-tabs"><button class="auth-tab active" type="button" data-view="login">Entrar</button><button class="auth-tab" type="button" data-view="register">Criar conta</button></div>
+  <form id="loginForm">
+    <div class="field"><label for="loginEmail">E-mail</label><input id="loginEmail" type="email" autocomplete="email" required maxlength="254" placeholder="voce@exemplo.com"></div>
+    <div class="field"><label for="loginPassword">Senha</label><div class="password-wrap"><input id="loginPassword" type="password" autocomplete="current-password" required minlength="10" placeholder="Sua senha"><button class="show" type="button" data-toggle="loginPassword">Mostrar</button></div></div>
+    <button class="btn" type="submit" id="loginBtn">Entrar</button><div class="row-between"><button class="linkbtn" type="button" id="forgotViewBtn">Esqueci minha senha</button><button class="linkbtn" type="button" id="resendViewBtn">Reenviar confirmação</button><button class="linkbtn" type="button" data-view="register">Criar conta</button></div>
+  </form>
+  <form id="registerForm" class="hidden">
+    <div class="field"><label for="registerName">Nome completo</label><input id="registerName" autocomplete="name" maxlength="120" required placeholder="Seu nome"></div>
+    <div class="field"><label for="registerEmail">E-mail</label><input id="registerEmail" type="email" autocomplete="email" maxlength="254" required placeholder="voce@exemplo.com"></div>
+    <div class="field"><label for="registerPassword">Crie uma senha</label><div class="password-wrap"><input id="registerPassword" type="password" autocomplete="new-password" minlength="10" required placeholder="Mínimo de 10 caracteres"><button class="show" type="button" data-toggle="registerPassword">Mostrar</button></div></div>
+    <p class="small-note">Use uma senha única com pelo menos 10 caracteres. Você precisará confirmar seu e-mail.</p><button class="btn" type="submit" id="registerBtn">Criar conta</button><button class="linkbtn" type="button" data-view="login">Já tenho conta</button>
+  </form>
+  <form id="forgotForm" class="hidden"><div class="field"><label for="forgotEmail">E-mail da conta</label><input id="forgotEmail" type="email" autocomplete="email" required maxlength="254" placeholder="voce@exemplo.com"></div><button class="btn" type="submit" id="forgotBtn">Enviar link de recuperação</button><button class="linkbtn" type="button" data-view="login">Voltar ao login</button></form>
+  <form id="resetForm" class="hidden"><div class="field"><label for="resetPassword">Nova senha</label><div class="password-wrap"><input id="resetPassword" type="password" autocomplete="new-password" minlength="10" required placeholder="Mínimo de 10 caracteres"><button class="show" type="button" data-toggle="resetPassword">Mostrar</button></div></div><button class="btn" type="submit" id="resetBtn">Salvar nova senha</button></form>
+  <form id="verifyForm" class="hidden"><p class="report-intro">Confirme seu e-mail usando o link que enviamos para você. Se já confirmou, volte para entrar.</p><button class="btn" type="button" id="resendVerifyBtn">Reenviar e-mail de confirmação</button><button class="linkbtn" type="button" data-view="login">Voltar ao login</button></form>
+  <p class="fine">Sua sessão é protegida pelo servidor. Não compartilhe sua senha ou códigos de confirmação.</p>
+</section>
+<div id="signedBar" class="signed-bar hidden"><div><strong id="signedName">Conta conectada</strong><div class="small-note" id="signedEmail"></div></div><button class="btn-secondary" id="logoutBtn" type="button">Sair da conta</button></div>
+<section id="reportApp" class="report-app hidden"><div class="eyebrow">Nova solicitação</div><h3>Conte à IA o que você precisa</h3><p class="report-intro">Para um resultado mais preciso, informe o objetivo e cole as instruções do professor. Se você já realizou uma pesquisa, inclua os procedimentos e os resultados reais.</p>
+          <form id="reportForm">
+            <div class="report-grid">
+              <div class="field"><label for="reportSubject">Área do relatório</label><select id="reportSubject" required><option value="Química">Relatório de Química</option><option value="Biologia">Relatório de Biologia</option></select></div>
+              <div class="field"><label for="reportType">Tipo de relatório</label><select id="reportType" required><option value="experimento">Relatório de aula prática/experimento</option><option value="pesquisa">Relatório de pesquisa bibliográfica</option><option value="campo">Relatório de pesquisa de campo</option><option value="projeto">Relatório de projeto</option><option value="analise">Relatório de análise / discussão</option></select></div>
+              <div class="field"><label for="reportTitle">Título ou tema</label><input id="reportTitle" maxlength="180" placeholder="Ex.: Análise do pH de substâncias" required></div>
+              <div class="field"><label for="reportStudent">Nome completo do(a) aluno(a)</label><input id="reportStudent" maxlength="180" placeholder="Nome para a capa"></div>
+              <div class="field"><label for="reportClass">Número e série/turma</label><input id="reportClass" maxlength="100" placeholder="Ex.: nº 12 — 2ª série"></div>
+              <div class="field"><label for="reportTeacher">Professor(a) orientador(a)</label><input id="reportTeacher" maxlength="150" placeholder="Nome do(a) professor(a), se aplicável"></div>
+              <div class="field"><label for="reportAudience">Público-alvo</label><select id="reportAudience"><option value="escolar">Comunidade escolar</option><option value="tecnico">Público técnico</option><option value="geral">Público geral</option><option value="academico">Público acadêmico</option></select></div>
+              <div class="field"><label for="reportTone">Estilo de escrita</label><select id="reportTone"><option value="academico">Acadêmico e formal</option><option value="claro">Claro e acessível</option><option value="tecnico">Técnico e objetivo</option></select></div>
+            </div>
+            <div class="field"><label for="reportObjective">Objetivo — o que você quer investigar ou demonstrar?</label><textarea id="reportObjective" placeholder="Explique a pergunta principal ou o propósito do trabalho." required></textarea></div>
+            <div class="field"><label for="reportModel">Modelo ou instruções da escola (opcional)</label><textarea id="reportModel" placeholder="Cole a estrutura exigida pelo professor, critérios de avaliação, seções obrigatórias ou um modelo de referência. A IA seguirá essas instruções."></textarea></div>
+            <div class="field"><label for="reportExtra">Solicitação adicional (opcional)</label><textarea id="reportExtra" placeholder="Ex.: cerca de 1.200 palavras, nível de ensino médio, comparar argumentos, usar citações autor-data somente quando houver fontes fornecidas."></textarea></div>
+            <div class="field"><label for="reportContext">Contexto e introdução — o que já se sabe sobre o assunto?</label><textarea id="reportContext" placeholder="Inclua informações de contexto, problema, justificativa ou conceitos importantes."></textarea></div>
+            <div class="field"><label for="reportMethod">Método / procedimentos — como o trabalho foi feito?</label><textarea id="reportMethod" placeholder="Ex.: pesquisa bibliográfica, questionário, entrevista, observação, teste ou análise de dados."></textarea></div>
+            <div class="field"><label for="reportData">Dados, observações ou resultados encontrados</label><textarea id="reportData" placeholder="Informe fatos, respostas, números, observações ou resultados reais. Se ainda não houver resultados, deixe em branco."></textarea></div>
+            <div class="field"><label for="reportAnalysis">Interpretação — o que os dados podem significar?</label><textarea id="reportAnalysis" placeholder="Registre sua interpretação, padrões percebidos, comparação ou explicação possível."></textarea></div>
+            <div class="field"><label for="reportLimits">Limitações e cuidados (opcional)</label><textarea id="reportLimits" placeholder="Ex.: amostra pequena, tempo limitado, dados incompletos ou fatores que não foram testados."></textarea></div>
+            <div class="field"><label for="reportSources">Fontes consultadas (opcional)</label><textarea id="reportSources" placeholder="Informe autores, livros, artigos, sites ou outras fontes utilizadas."></textarea></div>
+            <div class="report-actions"><button class="btn" id="generateReportBtn" type="submit">Gerar relatório</button><button class="btn-secondary" id="clearReportBtn" type="button">Limpar campos</button></div>
+          </form>
+<div class="output-wrap" aria-live="polite"><h4>Relatório gerado</h4><div id="reportOutput" class="report-output output-placeholder">O texto gerado pela IA aparecerá aqui.</div><div class="report-actions"><button class="btn-secondary" id="copyReportBtn" type="button" disabled>Copiar texto</button><button class="btn-secondary" id="downloadReportBtn" type="button" disabled>Baixar relatório em DOCX</button></div><p class="small-note">A IA pode cometer erros. Verifique informações, referências e exigências do professor. Nunca inclua dados pessoais sensíveis desnecessários.</p></div></section>
+<div id="configBox" class="config-box hidden"><strong>Configuração técnica:</strong> publique este projeto no Cloudflare Workers e configure as variáveis secretas indicadas no manual. A geração e o login só funcionam depois da configuração do servidor.</div></main></div>
+<script>
+// API same-origin do Cloudflare Worker. Nenhuma chave secreta fica no navegador.
+const $ = id => document.getElementById(id);
+let latestReport = "";
+let resetToken = new URLSearchParams(location.search).get("reset") || "";
+let verifyToken = new URLSearchParams(location.search).get("verify") || "";
+let currentUser = null;
+function showMessage(text, kind="info") { const box=$("message"); box.textContent=text; box.className=`message show ${kind}`; }
+function clearMessage() { $("message").className="message"; $("message").textContent=""; }
+function setBusy(button,busy,label) { if(busy){button.dataset.original=button.textContent;button.textContent=label;button.disabled=true;}else{button.textContent=button.dataset.original||button.textContent;button.disabled=false;} }
+async function api(path, body) {
+ const r=await fetch(path,{method:body===undefined?"GET":"POST",headers:body===undefined?{}:{"Content-Type":"application/json"},credentials:"same-origin",body:body===undefined?undefined:JSON.stringify(body)});
+ const d=await r.json().catch(()=>({})); if(!r.ok) throw new Error(d.error||`Erro no servidor (${r.status}).`); return d;
+}
+function setAuthView(view){
+ clearMessage(); ["loginForm","registerForm","forgotForm","resetForm","verifyForm"].forEach(id=>$(id).classList.add("hidden"));
+ const ids={login:"loginForm",register:"registerForm",forgot:"forgotForm",reset:"resetForm",verify:"verifyForm"};
+ $(ids[view]||"loginForm").classList.remove("hidden");
+ document.querySelectorAll(".auth-tab").forEach(b=>b.classList.toggle("active",b.dataset.view===view));
+ const titles={login:"Entrar na sua conta",register:"Criar sua conta",forgot:"Recuperar senha",reset:"Definir nova senha",verify:"Confirmar e-mail"}; $("authTitle").textContent=titles[view]||titles.login;
+}
+function showApp(user){currentUser=user;$("authPanel").classList.add("hidden");$("signedBar").classList.remove("hidden");$("reportApp").classList.remove("hidden");$("generatorIntro").classList.remove("hidden");$("configBox").classList.add("hidden");$("signedName").textContent=user.name||"Conta conectada";$("signedEmail").textContent=user.email||"";clearMessage();}
+function showAuth(){currentUser=null;$("authPanel").classList.remove("hidden");$("signedBar").classList.add("hidden");$("reportApp").classList.add("hidden");$("generatorIntro").classList.add("hidden");setAuthView("login");}
+function getValue(id) { return $(id)?.value?.trim() || ""; }
+function getValue(id) { return $(id)?.value?.trim() || ""; }
+$("reportForm").addEventListener("submit", async (e) => {
+ e.preventDefault(); clearMessage();
+ if(!currentUser) { showMessage("Entre na sua conta para gerar relatórios.","error"); return; }
+ const payload={subject:getValue("reportSubject"),student:getValue("reportStudent"),studentClass:getValue("reportClass"),teacher:getValue("reportTeacher"),type:getValue("reportType"),title:getValue("reportTitle"),audience:getValue("reportAudience"),tone:getValue("reportTone"),objective:getValue("reportObjective"),model:getValue("reportModel"),extra:getValue("reportExtra"),context:getValue("reportContext"),method:getValue("reportMethod"),data:getValue("reportData"),analysis:getValue("reportAnalysis"),limits:getValue("reportLimits"),sources:getValue("reportSources")};
+ if(!payload.title || !payload.objective) {showMessage("Preencha o título/tema e o objetivo do relatório.","error");return;}
+ const btn=$("generateReportBtn"); setBusy(btn,true,"A IA está escrevendo...");
+ $("reportOutput").textContent="Analisando sua solicitação e redigindo o relatório. Isso pode levar alguns segundos…"; $("reportOutput").classList.remove("output-placeholder"); $("copyReportBtn").disabled=true; $("downloadReportBtn").disabled=true;
+ try {
+  const response=await fetch("/api/generate",{method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",body:JSON.stringify(payload)});
+  const data=await response.json().catch(()=>({}));
+  if(!response.ok) throw new Error(data.error || `Falha ao chamar a IA (HTTP ${response.status}).`);
+  if(typeof data.report!=="string" || !data.report.trim()) throw new Error("A IA não retornou um relatório válido. Tente novamente.");
+  latestReport=data.report.trim(); $("reportOutput").textContent=latestReport; $("copyReportBtn").disabled=false; $("downloadReportBtn").disabled=false; showMessage("Relatório gerado. Preparando automaticamente o arquivo Word (.docx)…","success"); await downloadDocx();
+ } catch(err) { $("reportOutput").textContent="Não foi possível gerar o relatório."; showMessage(err.message || "Falha na conexão com o serviço de IA.","error"); }
+ finally {setBusy(btn,false);}
+});
+$("clearReportBtn").addEventListener("click",()=>{$("reportForm").reset();latestReport="";$("reportOutput").textContent="O texto gerado pela IA aparecerá aqui.";$("reportOutput").classList.add("output-placeholder");$("copyReportBtn").disabled=true;$("downloadReportBtn").disabled=true;clearMessage();});
+$("copyReportBtn").addEventListener("click",async()=>{if(!latestReport)return;try{await navigator.clipboard.writeText(latestReport);showMessage("Relatório copiado.","success");}catch{showMessage("Não foi possível copiar automaticamente. Selecione o texto e copie manualmente.","error");}});
+function safeFileName(value){return (value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"relatorio-sesi");}
+function addTextParagraph(text, options={}) {
+ const trimmed=(text||"").trim();
+ if(!trimmed) return null;
+ return new docx.Paragraph({
+   children:[new docx.TextRun({text:trimmed, font:"Times New Roman", size:24, bold:!!options.bold, italics:!!options.italics})],
+   alignment: options.alignment || docx.AlignmentType.JUSTIFIED,
+   heading: options.heading,
+   spacing:{before: options.before ?? 0, after: options.after ?? 120, line:360},
+   keepNext: !!options.keepNext
+ });
+}
+function reportToParagraphs(report){
+ const lines=report.replace(/\r/g,"").split("\n"), out=[];
+ const headingPattern=/^(?:#{1,3}\s*)?(?:\d+(?:\.\d+)*[.)]?\s+)?(introdução|objetivos?|material(?: e|es)? métodos?|reagentes e vidrarias|metodologia|procedimentos?|resultados?(?: e discussão)?|discussão|conclusão|considerações finais|referências|bibliografia|anexos?)\s*:?\s*$/i;
+ for(const raw of lines){
+   const line=raw.trim();
+   if(!line){out.push(new docx.Paragraph({text:"",spacing:{line:360,after:80}}));continue;}
+   const clean=line.replace(/^#{1,3}\s*/,"").replace(/\*\*(.*?)\*\*/g,"$1").replace(/^\*\s+/,"• ");
+   const isHeading=headingPattern.test(clean) || /^(\d+(?:\.\d+)*[.)]?\s+).{2,80}$/.test(clean) && clean.length<95;
+   if(isHeading){
+     out.push(new docx.Paragraph({children:[new docx.TextRun({text:clean.replace(/\*\*/g,""),font:"Times New Roman",size:24,bold:true})],alignment:docx.AlignmentType.LEFT,spacing:{before:220,after:100,line:360},keepNext:true}));
+   } else if (/^[-•]\s+/.test(clean)){
+     out.push(new docx.Paragraph({text:clean.replace(/^[-•]\s+/,""),bullet:{indent:360},alignment:docx.AlignmentType.JUSTIFIED,spacing:{after:80,line:360}}));
+   } else {
+     out.push(addTextParagraph(clean.replace(/\*\*/g,"").replace(/\*(.*?)\*/g,"$1")));
+   }
+ }
+ return out.filter(Boolean);
+}
+async function downloadDocx(){
+ if(!latestReport)return;
+ if(!window.docx){showMessage("A biblioteca de geração de DOCX não carregou. Verifique a conexão com a internet e tente novamente.","error");return;}
+ const btn=$("downloadReportBtn");setBusy(btn,true,"Montando arquivo Word...");
+ try{
+  const {Document,Packer,Paragraph,TextRun,AlignmentType,PageBreak}=docx;
+  const subject=getValue("reportSubject")||"Química";
+  const student=getValue("reportStudent")||"NOME DO(A) ALUNO(A)";
+  const studentClass=getValue("reportClass")||"Número e Série";
+  const teacher=getValue("reportTeacher")||"Professor(a) responsável";
+  const title=getValue("reportTitle")||"Título do trabalho";
+  const now=new Date();
+  const monthYear=new Intl.DateTimeFormat("pt-BR",{month:"long",year:"numeric"}).format(now);
+  const centered=(text,size=24,bold=false,after=180)=>new Paragraph({children:[new TextRun({text,font:"Times New Roman",size,bold})],alignment:AlignmentType.CENTER,spacing:{after,line:360}});
+  const left=(text,size=24,bold=false,after=120)=>new Paragraph({children:[new TextRun({text,font:"Times New Roman",size,bold})],alignment:AlignmentType.LEFT,spacing:{after,line:360}});
+  const children=[
+    centered("Escola SESI Betty Vaidergorn Feffer",24,true,1200),
+    new Paragraph({text:"",spacing:{after:3000,line:360}}),
+    centered(student,24,false,120),
+    centered(studentClass,24,false,1500),
+    new Paragraph({text:"",spacing:{after:1500,line:360}}),
+    centered(title,28,true,1800),
+    new Paragraph({text:"",spacing:{after:2200,line:360}}),
+    centered("Suzano",24,false,120),
+    centered(monthYear,24,false,0),
+    new Paragraph({children:[new PageBreak()] }),
+    centered("Escola SESI Betty Vaidergorn Feffer",24,true,1000),
+    new Paragraph({text:"",spacing:{after:1000,line:360}}),
+    centered(student,24,false,120),
+    centered(studentClass,24,false,1000),
+    new Paragraph({text:"",spacing:{after:700,line:360}}),
+    centered(title,26,true,1400),
+    new Paragraph({text:`Trabalho apresentado à disciplina de ${subject} como requisito de avaliação da atividade prática/pesquisa, sob orientação de ${teacher}.`,font:"Times New Roman",alignment:AlignmentType.JUSTIFIED,spacing:{before:500,after:120,line:360},indent:{left:5000}}),
+    new Paragraph({text:"",spacing:{after:1800,line:360}}),
+    centered("Suzano",24,false,120),
+    centered(monthYear,24,false,0),
+    new Paragraph({children:[new PageBreak()] })
+  ];
+  const bodyParas=reportToParagraphs(latestReport);
+  // If AI already labels the sections, use its content; otherwise preserve its generated text under the model headings.
+  const hasSections=/\bintrodução\b/i.test(latestReport)&&/\bobjetivos?\b/i.test(latestReport)&&/\bconclusão\b/i.test(latestReport);
+  if(hasSections) children.push(...bodyParas);
+  else {
+    children.push(...bodyParas);
+  }
+  const docObj=new Document({styles:{default:{document:{run:{font:"Times New Roman",size:24},paragraph:{spacing:{line:360}}}}},sections:[{properties:{page:{margin:{top:1701,right:1134,bottom:1134,left:1701}}},children}]});
+  const blob=await Packer.toBlob(docObj);
+  const url=URL.createObjectURL(blob),a=window.document.createElement("a");
+  a.href=url;a.download=safeFileName(title)+".docx";document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  showMessage("Arquivo DOCX criado. Abra no Word ou Google Docs e confira a capa, os dados e as referências antes de entregar.","success");
+ }catch(err){console.error(err);showMessage("Não foi possível montar o DOCX. Tente novamente ou recarregue a página.","error");}
+ finally{setBusy(btn,false);}
+}
+$("downloadReportBtn").addEventListener("click",downloadDocx);
+
+// Fluxos de autenticação: cadastro, login, verificação, recuperação e logout.
+document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>setAuthView(b.dataset.view)));
+document.querySelectorAll("[data-toggle]").forEach(b=>b.addEventListener("click",()=>{const i=$(b.dataset.toggle);i.type=i.type==="password"?"text":"password";b.textContent=i.type==="password"?"Mostrar":"Ocultar";}));
+$("forgotViewBtn").addEventListener("click",()=>{ $("forgotEmail").value=$("loginEmail").value; setAuthView("forgot"); });
+$("resendViewBtn").addEventListener("click",()=>{ $("verifyForm").dataset.email=getValue("loginEmail"); setAuthView("verify"); });
+$("loginForm").addEventListener("submit",async e=>{e.preventDefault();clearMessage();const b=$("loginBtn");setBusy(b,true,"Entrando...");try{const d=await api("/api/auth/login",{email:getValue("loginEmail"),password:$("loginPassword").value});showApp(d.user);showMessage("Login realizado com sucesso.","success");}catch(err){showMessage(err.message,"error");}finally{setBusy(b,false);}});
+$("registerForm").addEventListener("submit",async e=>{e.preventDefault();clearMessage();const b=$("registerBtn");setBusy(b,true,"Criando conta...");try{await api("/api/auth/register",{name:getValue("registerName"),email:getValue("registerEmail"),password:$("registerPassword").value});setAuthView("verify");$("verifyForm").dataset.email=getValue("registerEmail");showMessage("Conta criada. Confira seu e-mail para confirmar o cadastro.","success");}catch(err){showMessage(err.message,"error");}finally{setBusy(b,false);}});
+$("resendVerifyBtn").addEventListener("click",async()=>{try{await api("/api/auth/resend-verification",{email:$("verifyForm").dataset.email||getValue("loginEmail")||getValue("registerEmail")});showMessage("Se a conta estiver pendente, enviaremos um novo link de confirmação.","success");}catch(err){showMessage(err.message,"error");}});
+$("forgotForm").addEventListener("submit",async e=>{e.preventDefault();const b=$("forgotBtn");setBusy(b,true,"Enviando...");try{await api("/api/auth/forgot",{email:getValue("forgotEmail")});showMessage("Se o e-mail estiver cadastrado, você receberá um link de recuperação.","success");}catch(err){showMessage(err.message,"error");}finally{setBusy(b,false);}});
+$("resetForm").addEventListener("submit",async e=>{e.preventDefault();if(!resetToken){showMessage("Link de recuperação inválido ou ausente. Solicite outro.","error");return;}const b=$("resetBtn");setBusy(b,true,"Salvando...");try{await api("/api/auth/reset",{token:resetToken,password:$("resetPassword").value});history.replaceState({},"",location.pathname);resetToken="";setAuthView("login");showMessage("Senha alterada. Entre com a nova senha.","success");}catch(err){showMessage(err.message,"error");}finally{setBusy(b,false);}});
+$("logoutBtn").addEventListener("click",async()=>{try{await api("/api/auth/logout",{});}catch{}showAuth();showMessage("Você saiu da conta.","success");});
+async function bootAuth(){
+ if(resetToken){setAuthView("reset");showMessage("Defina uma nova senha para sua conta.","info");return;}
+ if(verifyToken){try{await api("/api/auth/verify",{token:verifyToken});history.replaceState({},"",location.pathname);setAuthView("login");showMessage("E-mail confirmado! Agora você pode entrar.","success");}catch(err){showMessage(err.message,"error");setAuthView("login");}return;}
+ try{const d=await api("/api/auth/me");if(d.user)showApp(d.user);else showAuth();}catch{showAuth();}
+}
+bootAuth();
+
+</script></body></html>
